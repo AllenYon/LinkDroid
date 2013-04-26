@@ -21,7 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import cn.link.imageloader.DisplayImageOptions;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -69,7 +69,7 @@ public class BaseImageDownloader implements ImageDownloader {
 	}
 
 	@Override
-	public InputStream getStream(String imageUri, Object extra) throws IOException {
+	public InputStream getStream(String imageUri, DisplayImageOptions extra) throws IOException {
 		switch (Scheme.ofUri(imageUri)) {
 			case HTTP:
 			case HTTPS:
@@ -100,13 +100,11 @@ public class BaseImageDownloader implements ImageDownloader {
 	 */
 	protected InputStream getStreamFromNetwork(String imageUri, Object extra) throws IOException {
 		HttpURLConnection conn = connectTo(imageUri);
-
 		int redirectCount = 0;
 		while (conn.getResponseCode() / 100 == 3 && redirectCount < MAX_REDIRECT_COUNT) {
 			conn = connectTo(conn.getHeaderField("Location"));
 			redirectCount++;
 		}
-
 		return new BufferedInputStream(conn.getInputStream(), BUFFER_SIZE);
 	}
 
@@ -197,4 +195,6 @@ public class BaseImageDownloader implements ImageDownloader {
 	protected InputStream getStreamFromOtherSource(String imageUri, Object extra) throws IOException {
 		throw new UnsupportedOperationException(String.format(ERROR_UNSUPPORTED_SCHEME, imageUri));
 	}
+
+
 }

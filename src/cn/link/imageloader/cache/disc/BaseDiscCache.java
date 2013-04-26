@@ -15,10 +15,16 @@
  *******************************************************************************/
 package cn.link.imageloader.cache.disc;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import cn.link.imageloader.DefaultConfigurationFactory;
+import cn.link.imageloader.DisplayImageOptions;
 import cn.link.imageloader.assist.FileNameGenerator;
+import cn.link.imageloader.assist.IoUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Base disc cache. Implements common functionality for disc cache.
@@ -52,16 +58,19 @@ public class BaseDiscCache implements DiscCacheAware {
         this.mFileNameGenerator = fileNameGenerator;
     }
 
-
     @Override
-    public void put(String key, File file) {
-        //ToDo
+    public Bitmap read(String key, DisplayImageOptions options) {
+        String fileName = mFileNameGenerator.generate(key);
+        return null;
     }
 
     @Override
-    public File get(String key) {
-        String fileName = mFileNameGenerator.generate(key);
-        return new File(mCacheDir, fileName);
+    public Bitmap decodeAndWrite(InputStream input, DisplayImageOptions options) throws IOException {
+        try {
+            return BitmapFactory.decodeStream(input, null, options.getDecodingOptions());
+        } finally {
+            IoUtils.closeSilently(input);
+        }
     }
 
     @Override

@@ -17,23 +17,18 @@ package cn.link.imageloader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build;
 import cn.link.imageloader.assist.FileNameGenerator;
 import cn.link.imageloader.assist.HashCodeFileNameGenerator;
 import cn.link.imageloader.assist.StorageUtils;
 import cn.link.imageloader.cache.disc.DiscCacheAware;
 import cn.link.imageloader.cache.memory.LruCacheImpl;
 import cn.link.imageloader.cache.memory.MemoryCacheAware;
-import cn.link.imageloader.decode.BaseImageDecoder;
-import cn.link.imageloader.decode.ImageDecoder;
 import cn.link.imageloader.display.BitmapDisplayer;
 import cn.link.imageloader.display.SimpleBitmapDisplayer;
 import cn.link.imageloader.download.BaseImageDownloader;
 import cn.link.imageloader.download.ImageDownloader;
 
 import java.io.File;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class DefaultConfigurationFactory {
 
@@ -46,16 +41,17 @@ public class DefaultConfigurationFactory {
                                                  FileNameGenerator discCacheFileNameGenerator,
                                                  int discCacheSize,
                                                  int discCacheFileCount) {
-        if (discCacheSize > 0) {
-            File individualCacheDir = StorageUtils.getIndividualCacheDirectory(context);
-            return new TotalSizeLimitedDiscCache(individualCacheDir, discCacheFileNameGenerator, discCacheSize);
-        } else if (discCacheFileCount > 0) {
-            File individualCacheDir = StorageUtils.getIndividualCacheDirectory(context);
-            return new FileCountLimitedDiscCache(individualCacheDir, discCacheFileNameGenerator, discCacheFileCount);
-        } else {
-            File cacheDir = StorageUtils.getCacheDirectory(context);
-            return new UnlimitedDiscCache(cacheDir, discCacheFileNameGenerator);
-        }
+//        if (discCacheSize > 0) {
+//            File individualCacheDir = StorageUtils.getIndividualCacheDirectory(context);
+//            return new TotalSizeLimitedDiscCache(individualCacheDir, discCacheFileNameGenerator, discCacheSize);
+//        } else if (discCacheFileCount > 0) {
+//            File individualCacheDir = StorageUtils.getIndividualCacheDirectory(context);
+//            return new FileCountLimitedDiscCache(individualCacheDir, discCacheFileNameGenerator, discCacheFileCount);
+//        } else {
+//            File cacheDir = StorageUtils.getCacheDirectory(context);
+//            return new UnlimitedDiscCache(cacheDir, discCacheFileNameGenerator);
+//        }
+        return null;
     }
 
     /**
@@ -80,11 +76,6 @@ public class DefaultConfigurationFactory {
             memoryCacheSize = (int) (Runtime.getRuntime().maxMemory() / 8);
         }
         MemoryCacheAware<String, Bitmap> memoryCache;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-//            memoryCache = new LruMemoryCache(memoryCacheSize);
-//        } else {
-//            memoryCache = new LRULimitedMemoryCache(memoryCacheSize);
-//        }
         memoryCache = new LruCacheImpl(memoryCacheSize);
         return memoryCache;
     }
@@ -96,9 +87,7 @@ public class DefaultConfigurationFactory {
         return new BaseImageDownloader(context);
     }
 
-    public static ImageDecoder createImageDecoder(boolean loggingEnabled) {
-        return new BaseImageDecoder(loggingEnabled);
-    }
+
 
     public static BitmapDisplayer createBitmapDisplayer() {
         return new SimpleBitmapDisplayer();

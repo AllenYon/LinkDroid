@@ -7,11 +7,12 @@ import android.widget.ImageButton;
 import cn.link.core.SimpleAsyncTask;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class LKImageView extends ImageButton {
     private static ImageLoaderConfiguration mConfiguration;
     private DisplayImageOptions mDisplayOptions;
-
 
     public LKImageView(Context context) {
         super(context);
@@ -29,7 +30,7 @@ public class LKImageView extends ImageButton {
 
     public void display() {
         Bitmap bitmap = null;
-        if (mDisplayOptions.isDisplayIfInMemory()) {
+        if (mDisplayOptions.isDispalyIfInMemory()) {
             bitmap = mConfiguration.memoryCache.get(mDisplayOptions.getDisplayUrl());
             mDisplayOptions.getDisplayer().display(bitmap, this);
         } else {
@@ -49,12 +50,18 @@ public class LKImageView extends ImageButton {
         protected Bitmap doInBackground(Void... params) {
             Bitmap bitmap = mConfiguration.memoryCache.get(mDisplayOptions.getDisplayUrl());
             if (bitmap == null) {
-                bitmap = mConfiguration.discCache.decode(mDisplayOptions.getDisplayUrl(), null);
+                bitmap = mConfiguration.discCache.read(mDisplayOptions.getDisplayUrl(), null);
                 if (bitmap == null) {
-                    bitmap == mConfiguration.downloader.download(mDisplayOptions.getDisplayUrl(), null);
-                    mConfiguration.discCache.put(mDisplayOptions.getDisplayUrl(), bitmap);
-                    mConfiguration.memoryCache.put(mDisplayOptions.getDisplayUrl(), bitmap);
-                    return bitmap;
+                    try {
+                        InputStream inputStream = mConfiguration.downloader.getStream(mDisplayOptions.getDisplayUrl(), null);
+                        bitmap = mConfiguration.discCache.decodeAndWrite(inputStream, mDisplayOptions);
+                        if (bitmap != null) {
+                            mConfiguration.memoryCache.put(mDisplayOptions.getDisplayUrl(), bitmap);
+                            return bitmap;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             return null;  //ToDo

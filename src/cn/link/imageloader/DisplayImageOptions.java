@@ -16,136 +16,67 @@
 package cn.link.imageloader;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
-import cn.link.imageloader.assist.BitmapProcessor;
 import cn.link.imageloader.assist.ImageScaleType;
 import cn.link.imageloader.display.BitmapDisplayer;
 import cn.link.imageloader.display.BitmapProgressListener;
-import cn.link.imageloader.display.BitmapProgressListener;
 
 public final class DisplayImageOptions {
-    private final int stubImage;
-    private final int imageForEmptyUri;
-    private final int imageOnFail;
-    private final boolean resetViewBeforeLoading;
-    private final boolean cacheInMemory;
-    private final boolean cacheOnDisc;
-    private final ImageScaleType imageScaleType;
-    private final Options decodingOptions;
-    private final int delayBeforeLoading;
-    private final Object extraForDownloader;
-    private final BitmapProcessor preProcessor;
-    private final BitmapProcessor postProcessor;
-    private final BitmapDisplayer displayer;
+    private final int mResetImage;
+    private final boolean mIfCacheInMemory;
+    private final boolean mIfCacheOnDisc;
+    private final ImageScaleType mImageScaleType;
+    private final Options mDecodingOptions;
+    private final Bitmap.CompressFormat imageCompressFormatForDiscCache;
+    private final int imageQualityForDiscCache;
+    private final BitmapDisplayer mDisplayer;
 
     private final BitmapProgressListener mProgressListener;
     private final boolean mDispalyIfInMemory;
     private final String mDisplayUrl;
 
     private DisplayImageOptions(Builder builder) {
-        stubImage = builder.stubImage;
-        imageForEmptyUri = builder.imageForEmptyUri;
-        imageOnFail = builder.imageOnFail;
-        resetViewBeforeLoading = builder.resetViewBeforeLoading;
-        cacheInMemory = builder.cacheInMemory;
-        cacheOnDisc = builder.cacheOnDisc;
-        imageScaleType = builder.imageScaleType;
-        decodingOptions = builder.decodingOptions;
-        delayBeforeLoading = builder.delayBeforeLoading;
-        extraForDownloader = builder.extraForDownloader;
-        preProcessor = builder.preProcessor;
-        postProcessor = builder.postProcessor;
-        displayer = builder.displayer;
-
+        mResetImage = builder.mResetImage;
+        mIfCacheInMemory = builder.mIfCacheInMemory;
+        mIfCacheOnDisc = builder.mIfCacheOnDisc;
+        mImageScaleType = builder.mImageScaleType;
+        mDecodingOptions = builder.mDecodingOptions;
+        mDisplayer = builder.mDisplay;
         mProgressListener = builder.mProgressListener;
         mDispalyIfInMemory = builder.mDispalyIfInMemory;
         mDisplayUrl = builder.mDisplayUrl;
-
     }
 
-    public boolean shouldShowStubImage() {
-        return stubImage != 0;
+    public int getResetImage() {
+        return mResetImage;
     }
 
-    public boolean shouldShowImageForEmptyUri() {
-        return imageForEmptyUri != 0;
+    public boolean ifCacheInMemory() {
+        return mIfCacheInMemory;
     }
 
-    public boolean shouldShowImageOnFail() {
-        return imageOnFail != 0;
-    }
-
-    public boolean shouldPreProcess() {
-        return preProcessor != null;
-    }
-
-    public boolean shouldPostProcess() {
-        return postProcessor != null;
-    }
-
-    public boolean shouldDelayBeforeLoading() {
-        return delayBeforeLoading > 0;
-    }
-
-    public int getStubImage() {
-        return stubImage;
-    }
-
-    public int getImageForEmptyUri() {
-        return imageForEmptyUri;
-    }
-
-    public int getImageOnFail() {
-        return imageOnFail;
-    }
-
-    public boolean isResetViewBeforeLoading() {
-        return resetViewBeforeLoading;
-    }
-
-    public boolean isCacheInMemory() {
-        return cacheInMemory;
-    }
-
-    public boolean isCacheOnDisc() {
-        return cacheOnDisc;
+    public boolean ifCacheOnDisc() {
+        return mIfCacheOnDisc;
     }
 
     public ImageScaleType getImageScaleType() {
-        return imageScaleType;
+        return mImageScaleType;
     }
 
     public Options getDecodingOptions() {
-        return decodingOptions;
-    }
-
-    public int getDelayBeforeLoading() {
-        return delayBeforeLoading;
-    }
-
-    public Object getExtraForDownloader() {
-        return extraForDownloader;
-    }
-
-    public BitmapProcessor getPreProcessor() {
-        return preProcessor;
-    }
-
-    public BitmapProcessor getPostProcessor() {
-        return postProcessor;
+        return mDecodingOptions;
     }
 
     public BitmapDisplayer getDisplayer() {
-        return displayer;
+        return mDisplayer;
     }
 
+    public BitmapProgressListener getProgressListener() {
+        return mProgressListener;
+    }
 
-    /**
-     * 如果在内存中，则直接显示
-     *
-     * @return
-     */
-    public boolean isDisplayIfInMemory() {
+    public boolean isDispalyIfInMemory() {
         return mDispalyIfInMemory;
     }
 
@@ -153,108 +84,55 @@ public final class DisplayImageOptions {
         return mDisplayUrl;
     }
 
-
     public static class Builder {
-        private int stubImage = 0;
-        private int imageForEmptyUri = 0;
-        private int imageOnFail = 0;
-        private boolean resetViewBeforeLoading = false;
-        private boolean cacheInMemory = false;
-        private boolean cacheOnDisc = false;
-        private ImageScaleType imageScaleType = ImageScaleType.IN_SAMPLE_POWER_OF_2;
-        private Options decodingOptions = new Options();
-        private int delayBeforeLoading = 0;
-        private Object extraForDownloader = null;
-        private BitmapProcessor preProcessor = null;
-        private BitmapProcessor postProcessor = null;
-        private BitmapDisplayer displayer = DefaultConfigurationFactory.createBitmapDisplayer();
+        private int mResetImage = 0;
+        private boolean mIfCacheInMemory = true;
+        private boolean mIfCacheOnDisc = true;
+        private ImageScaleType mImageScaleType = ImageScaleType.IN_SAMPLE_POWER_OF_2;
+        private Options mDecodingOptions = new Options();
+        private BitmapDisplayer mDisplay = DefaultConfigurationFactory.createBitmapDisplayer();
 
         private BitmapProgressListener mProgressListener;
         private boolean mDispalyIfInMemory;
         private String mDisplayUrl;
 
         public Builder() {
-            decodingOptions.inPurgeable = true;
-            decodingOptions.inInputShareable = true;
+            mDecodingOptions.inPurgeable = true;
+            mDecodingOptions.inInputShareable = true;
         }
 
-        public Builder showStubImage(int stubImageRes) {
-            stubImage = stubImageRes;
+        public Builder setResetImage(int img) {
+            this.mResetImage = img;
             return this;
         }
 
 
-        public Builder showImageForEmptyUri(int imageRes) {
-            imageForEmptyUri = imageRes;
+        public Builder disableCacheInMemory() {
+            mIfCacheInMemory = false;
             return this;
         }
 
 
-        public Builder showImageOnFail(int imageRes) {
-            imageOnFail = imageRes;
+        public Builder disableCacheOnDisc() {
+            mIfCacheOnDisc = false;
             return this;
         }
 
 
-        public Builder resetViewBeforeLoading() {
-            resetViewBeforeLoading = true;
+        public Builder setImageScaleType(ImageScaleType imageScaleType) {
+            this.mImageScaleType = imageScaleType;
             return this;
         }
 
 
-        public Builder cacheInMemory() {
-            cacheInMemory = true;
+        public Builder setDecodingOptions(Options decodingOptions) {
+            this.mDecodingOptions = decodingOptions;
             return this;
         }
 
 
-        public Builder cacheOnDisc() {
-            cacheOnDisc = true;
-            return this;
-        }
-
-
-        public Builder imageScaleType(ImageScaleType imageScaleType) {
-            this.imageScaleType = imageScaleType;
-            return this;
-        }
-
-
-        public Builder bitmapConfig(Bitmap.Config bitmapConfig) {
-            decodingOptions.inPreferredConfig = bitmapConfig;
-            return this;
-        }
-
-        public Builder decodingOptions(Options decodingOptions) {
-            this.decodingOptions = decodingOptions;
-            return this;
-        }
-
-        public Builder delayBeforeLoading(int delayInMillis) {
-            this.delayBeforeLoading = delayInMillis;
-            return this;
-        }
-
-        public Builder extraForDownloader(Object extra) {
-            this.extraForDownloader = extra;
-            return this;
-        }
-
-
-        public Builder preProcessor(BitmapProcessor preProcessor) {
-            this.preProcessor = preProcessor;
-            return this;
-        }
-
-
-        public Builder postProcessor(BitmapProcessor postProcessor) {
-            this.postProcessor = postProcessor;
-            return this;
-        }
-
-
-        public Builder displayer(BitmapDisplayer displayer) {
-            this.displayer = displayer;
+        public Builder setDisplayer(BitmapDisplayer displayer) {
+            this.mDisplay = displayer;
             return this;
         }
 
@@ -275,19 +153,15 @@ public final class DisplayImageOptions {
 
 
         public Builder cloneFrom(DisplayImageOptions options) {
-            stubImage = options.stubImage;
-            imageForEmptyUri = options.imageForEmptyUri;
-            imageOnFail = options.imageOnFail;
-            resetViewBeforeLoading = options.resetViewBeforeLoading;
-            cacheInMemory = options.cacheInMemory;
-            cacheOnDisc = options.cacheOnDisc;
-            imageScaleType = options.imageScaleType;
-            decodingOptions = options.decodingOptions;
-            delayBeforeLoading = options.delayBeforeLoading;
-            extraForDownloader = options.extraForDownloader;
-            preProcessor = options.preProcessor;
-            postProcessor = options.postProcessor;
-            displayer = options.displayer;
+            mResetImage = options.mResetImage;
+            mIfCacheInMemory = options.mIfCacheInMemory;
+            mIfCacheOnDisc = options.mIfCacheOnDisc;
+            mImageScaleType = options.mImageScaleType;
+            mDecodingOptions = options.mDecodingOptions;
+            mDisplay = options.mDisplayer;
+            mProgressListener = options.mProgressListener;
+            mDispalyIfInMemory = options.mDispalyIfInMemory;
+            mDisplayUrl = options.mDisplayUrl;
             return this;
         }
 

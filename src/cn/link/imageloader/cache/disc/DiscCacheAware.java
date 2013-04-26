@@ -1,18 +1,17 @@
 package cn.link.imageloader.cache.disc;
 
 import android.graphics.Bitmap;
-import cn.link.imageloader.decode.ImageDecodingInfo;
+import cn.link.imageloader.DisplayImageOptions;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 public interface DiscCacheAware {
 
-    void put(String key, Bitmap bitmap);
 
-    Bitmap get(String key);
+    Bitmap read(String key,DisplayImageOptions options);
 
-    Bitmap decode(String url,ImageDecodingInfo info);
-
+    Bitmap decodeAndWrite(InputStream input,DisplayImageOptions options) throws IOException;
 
     void clear();
 }

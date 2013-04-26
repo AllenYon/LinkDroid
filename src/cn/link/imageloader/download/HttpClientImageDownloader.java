@@ -32,20 +32,24 @@ import java.io.InputStream;
  * @since 1.4.1
  */
 public class HttpClientImageDownloader extends BaseImageDownloader {
+    @Override
+    public InputStream getBitmap(String imageUri) throws IOException {
+        return null;  //ToDo
+    }
 
-	private HttpClient httpClient;
-
-	public HttpClientImageDownloader(Context context, HttpClient httpClient) {
-		super(context);
-		this.httpClient = httpClient;
-	}
-
-	@Override
-	protected InputStream getStreamFromNetwork(String imageUri, Object extra) throws IOException {
-		HttpGet httpRequest = new HttpGet(imageUri);
-		HttpResponse response = httpClient.execute(httpRequest);
-		HttpEntity entity = response.getEntity();
-		BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
-		return bufHttpEntity.getContent();
-	}
+//	private HttpClient httpClient;
+//
+//	public HttpClientImageDownloader(Context context, HttpClient httpClient) {
+//		super(context);
+//		this.httpClient = httpClient;
+//	}
+//
+//	@Override
+//	protected InputStream getStreamFromNetwork(String imageUri, Object extra) throws IOException {
+//		HttpGet httpRequest = new HttpGet(imageUri);
+//		HttpResponse response = httpClient.execute(httpRequest);
+//		HttpEntity entity = response.getEntity();
+//		BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+//		return bufHttpEntity.getContent();
+//	}
 }
