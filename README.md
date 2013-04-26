@@ -1,7 +1,7 @@
 LinkDroid
 =========
 
-一个图片类应用框架，帮助开发者解决Bitmap相关的问题（如OOM，二级缓存，手势裁剪，显示等），快速开发应用。
+一个图片类应用框架，帮助开发者解决Bitmap相关的问题（如OOM，二级缓存，手势裁剪，显示等），快速开发应用。<br>
 主要包含以下几个模块：
 1.Android-Universal-Image-Loader 图片加载器 ，解决oom，二级缓存等
   https://github.com/nostra13/Android-Universal-Image-Loader
