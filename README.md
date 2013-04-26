@@ -3,7 +3,7 @@ LinkDroid
 
 一个图片类应用框架，帮助开发者解决Bitmap相关的问题（如OOM，二级缓存，手势裁剪，显示等），快速开发应用。<br>
 主要包含以下几个模块：<br>
-1.<a href="https://github.com/nostra13/Android-Universal-Image-loader" >Android-Universal-Image-Loader</a> 图片加载器 ，解决oom，二级缓存等<br>
+<h3>1.<a href="https://github.com/nostra13/Android-Universal-Image-loader" >Android-Universal-Image-Loader</a> 图片加载器 ，解决oom，二级缓存等<br></hr3>
   1.1. 将原有的并发请求统一在SimpleAsyncTask类中处理。（原因稍后解释）<br>
   1.2. 不再使用ImageLoader类来加载图片，改用 LKImageView extends ImageButton 加载。<br>
   1.3. 简化Configuration 和 DisplayImageOptions ，删除某些不必要的参数<br>
@@ -19,9 +19,9 @@ LinkDroid
 5.SimpleAsyncTask类,统一的并发处理线程池<br>
 6.LasyAdapterView 对在AdapterView中加载大量图片的显示策略做细化，提升体验<br>
 
-联系我：
-新浪：@Link颜
-扣扣：1926694
+如果你有任何相关这个项目的问题的话，联系我：<br>
+微博：@Link颜<br>
+扣扣：1926694<br>
 
 <h2>License</h2>
 <pre>
