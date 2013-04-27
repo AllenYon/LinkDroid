@@ -21,7 +21,7 @@ LinkDroid
 
 如果你有任何相关这个项目的问题的话，联系我：<br>
 微博：@Link颜<br>
-扣扣：1926694<br>
+Email:wsyanligang@gmail.com<br>
 
 <h2>License</h2>
 <pre>
