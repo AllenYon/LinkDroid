@@ -1,4 +1,10 @@
-gen/
-out/
-LinkDroid.iml
-.idea/
+library/gen/
+library/out/
+library/LinkDroid.iml
+library/.idea/
+
+example/gen/
+example/out/
+example/LinkDroid.iml
+example/.idea/
+
